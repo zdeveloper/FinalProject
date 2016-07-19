@@ -19,11 +19,11 @@ for (x,y,w,h) in faces:
     eyes = eye_cascade.detectMultiScale(roi_gray)
 
     # print eyes
-    x = eyes[0, 1]
-    xx = eyes[1, 1] + eyes[1, 3]
-
-    y = eyes[0, 0]
-    yy = eyes[1, 0] + eyes[1, 2]
+    # x = eyes[0, 1]
+    # xx = eyes[1, 1] + eyes[1, 3]
+    #
+    # y = eyes[0, 0]
+    # yy = eyes[1, 0] + eyes[1, 2]
 
     # print x, xx
     # print y, yy
@@ -38,7 +38,7 @@ for (x,y,w,h) in faces:
 
 
 
-
+    print eyes
     # cv2.addWeighted(src1, alpha, src2, beta, gamma[, dst[, dtype]])
     ex = eyes[0, 0]
     ey = eyes[0, 1]
@@ -47,11 +47,21 @@ for (x,y,w,h) in faces:
     ew2 = eyes[1, 2]
     eh2 = eyes[1, 3]
 
+
     '''RESIZE'''
     size = (ex2+ew2-ex , ey2+eh2-ey)
     glasses = cv2.resize(glasses,size)
     file_name = "output/glasses" + str(w) + ".jpg"
     cv2.imwrite(file_name, glasses );
+
+    masked_img = roi_color[ey:ey2+eh2, ex:ex2+ew2] = roi_color[ey:ey2+eh2, ex:ex2+ew2] * 5
+    print 'mask'
+    print masked_img.shape
+    print 'glasses'
+    print glasses.shape
+
+
+    roi_color = cv2.addWeighted(glasses,0.7,masked_img,0.3,0)
 
     cv2.circle(roi_color, (ex, ey), 1, (0,255,0), 1)
     cv2.circle(roi_color, (ex2+ew2, ey2+eh2), 1, (0,0,255), 1)
@@ -68,9 +78,6 @@ for (x,y,w,h) in faces:
 
 
     # addPicture(glasses, img, )
-
-print img[ex:ex2+ew2, ey:ey2+eh2]
-img[ex:ex2+ew2, ey:ey2+eh2] = glasses
 
 cv2.imwrite("output/Lionel-Messi.jpg", img );
 
