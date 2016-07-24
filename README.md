@@ -33,7 +33,7 @@ Dillinger uses a number of open source projects to work properly:
 
 
 ### Version
-3.2.7
+0.1.0
 
 License
 ----
