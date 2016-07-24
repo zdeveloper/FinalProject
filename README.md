@@ -26,10 +26,9 @@ Dillinger uses a number of open source projects to work properly:
 
 ### Todos
 
- - Write Tests
- - Rethink Github Save
- - Add Code Comments
- - Add Night Mode
+ - Stabilize the code
+ - Rethink picture merge
+ - Add more filters
 
 
 ### Version
