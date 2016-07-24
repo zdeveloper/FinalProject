@@ -42,8 +42,9 @@ for (x,y,w,h) in faces:
     print 'eyes[0]', eyes[0]
     ex, ey, ew, eh= eyes[0]
 
-    print 'eyes[1]', eyes[1]
-    ex2, ey2, ew2, eh2 = eyes[1]
+    # we use len(eyes)-1 becuase sometimes we arent garanteed that we only get 2 eyes
+    print 'eyes[1]', eyes[len(eyes)-1]
+    ex2, ey2, ew2, eh2 = eyes[len(eyes)-1]
 
     ex = ex - width_offset
     ew2 = ew2 + width_offset
@@ -115,7 +116,7 @@ for (x,y,w,h) in faces:
 
     break
 
-cv2.imwrite("output/Lionel-Messi.jpg", img );
+cv2.imwrite("output/output.jpg", img );
 
 
 # cv2.imshow('img',img)
