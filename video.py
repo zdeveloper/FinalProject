@@ -1,5 +1,8 @@
 import numpy as np
 import cv2
+from enhance import Enhance
+
+enhance = Enhance()
 
 # multiple cascades: https://github.com/Itseez/opencv/tree/master/data/haarcascades
 
@@ -41,7 +44,7 @@ while True:
 			#waiting for keyboard input
 			key = cv2.waitKey(30) & 0xff
 			if key == escKey:
-				break	
+				break
 		except:
 			print("Error during the convertion")
 
@@ -49,5 +52,3 @@ while True:
 
 cam.release()
 cv2.destroyAllWindows()
-
-
