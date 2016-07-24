@@ -5,7 +5,7 @@ class Enhance(object):
     def __init__(self):
         self.debug = False
         self.face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
-        self.eye_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_eye_tree_eyeglasses.xml')
+        self.eye_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_eye.xml')
 
         self.glasses = cv2.imread('glasses/glasses1.png')
 
@@ -31,7 +31,7 @@ class Enhance(object):
         faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
 
         for (x,y,w,h) in faces:
-            print x,y,w,h
+            # print x,y,w,h
 
             if debug:
                 cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
@@ -39,25 +39,26 @@ class Enhance(object):
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = img[y:y+h, x:x+w]
             eyes = self.eye_cascade.detectMultiScale(roi_gray)
-
+            if (not len(eyes) > 0):
+            	return img
             # print eyes
             # order the eyes based on their x direction , very important
             eyes = sorted(eyes, key=lambda eye: eye[0])
 
-            print 'eyes', eyes
+            # print 'eyes', eyes
             # print glasses
             # print img
 
-            width_offset = int((w-x) * 0.2)
+            width_offset = int((w-x) * 0.3)
 
             extra_width = int((w-x) * 1.2)
             # width_offset = 0
 
-            print 'eyes[0]', eyes[0]
+            # print 'eyes[0]', eyes[0]
             ex, ey, ew, eh= eyes[0]
 
             # we use len(eyes)-1 becuase sometimes we arent garanteed that we only get 2 eyes
-            print 'eyes[1]', eyes[len(eyes)-1]
+            # print 'eyes[1]', eyes[len(eyes)-1]
             ex2, ey2, ew2, eh2 = eyes[len(eyes)-1]
 
             ex = ex - width_offset
@@ -68,7 +69,9 @@ class Enhance(object):
 
             '''RESIZE'''
             size = (ex2+ew2-ex, ey2+eh2-ey)
-            print 'size', size
+            if size[0] < 1 or size[1] < 1:
+            	return img
+            # print 'size', size
             glasses = cv2.resize(glasses,size)
             # file_name = "output/glasses" + str(w) + ".jpg"
             # cv2.imwrite(file_name, glasses );
@@ -79,8 +82,9 @@ class Enhance(object):
             we might have a negative ex since we subtract an offset
             '''
             masked_img = img[ ey+y:row+ey+y, ex+x:col+ex+x]
-            print "masked_img.shape", masked_img.shape
-            print 'glasses.shape',  glasses.shape
+            if debug:
+                print "masked_img.shape", masked_img.shape
+                print 'glasses.shape',  glasses.shape
 
             # roi_color = cv2.addWeighted(masked_img,0.5,glasses,0.5,5)
 
@@ -122,21 +126,17 @@ class Enhance(object):
                 # cv2.rectangle(img, pt1, pt2, color, thickness)
                 if debug:
                     cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(255,255,0))
-                    # cv2.circle(roi_color, (ex, ey), 1, (0,0,255), 1)
-                    # cv2.circle(roi_color, (ex+ew, ey), 1, (0,0,255), 1)
-                    # cv2.circle(roi_color, (ex, ey+eh), 1, (0,0,255), 1)
-                    # cv2.circle(roi_color, (ex+ew, ey+eh), 1, (0,0,255), 1)
+                    cv2.circle(roi_color, (ex, ey), 1, (0,0,255), 1)
+                    cv2.circle(roi_color, (ex+ew, ey), 1, (0,0,255), 1)
+                    cv2.circle(roi_color, (ex, ey+eh), 1, (0,0,255), 1)
+                    cv2.circle(roi_color, (ex+ew, ey+eh), 1, (0,0,255), 1)
                 pass
             break
         return img
     def writeImageToFile(self, img):
         cv2.imwrite("output/output.jpg", img );
 
-    def version(self):
-        print "I am running"
-
 # enhance = Enhance()
-#
 # enhance.writeImageToFile(enhance.addGlasses())
 
 # cv2.imshow('img',img)
