@@ -28,7 +28,7 @@ class Enhance(object):
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # print gray
-        faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
+        faces = self.face_cascade.detectMultiScale(gray, 1.3, 3)
 
         for (x,y,w,h) in faces:
             # print x,y,w,h
@@ -38,7 +38,7 @@ class Enhance(object):
 
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = img[y:y+h, x:x+w]
-            eyes = self.eye_cascade.detectMultiScale(roi_gray)
+            eyes = self.eye_cascade.detectMultiScale(roi_gray, minNeighbors=7)
             if (not len(eyes) > 0):
             	return img
             # print eyes
