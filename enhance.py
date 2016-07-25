@@ -8,7 +8,8 @@ class Enhance(object):
         self.eye_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_eye.xml')
 
         self.glasses = cv2.imread('glasses/glasses1.png')
-
+        self.eyeL = None
+        self.eyeR = None
     def __loadFromFile(self):
         img = cv2.imread('input/Lionel-Messi.jpg')
         # img = cv2.imread('input/decaprio.jpg')
@@ -54,16 +55,21 @@ class Enhance(object):
             extra_width = int((w-x) * 1.2)
             # width_offset = 0
 
-            # print 'eyes[0]', eyes[0]
-            ex, ey, ew, eh= eyes[0]
-
-            # we use len(eyes)-1 becuase sometimes we arent garanteed that we only get 2 eyes
-            # print 'eyes[1]', eyes[len(eyes)-1]
-            ex2, ey2, ew2, eh2 = eyes[len(eyes)-1]
+            if (len(eyes) == 2):
+                # print 'eyes[0]', eyes[0]
+                ex, ey, ew, eh= eyes[0]
+                # we use len(eyes)-1 becuase sometimes we arent garanteed that we only get 2 eyes
+                ex2, ey2, ew2, eh2 = eyes[len(eyes)-1]
+                self.eyeL = eyes[0]
+                self.eyeR = eyes[len(eyes)-1]
+            elif self.eyeL is not None and self.eyeR is not None:
+                ex, ey, ew, eh= self.eyeL
+                ex2, ey2, ew2, eh2 = self.eyeR
+            else:
+                return img
 
             ex = ex - width_offset
             ew2 = ew2 + width_offset
-
 
             width = ex2+ew2-ex + extra_width
 
